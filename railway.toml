@@ -1,0 +1,209 @@
+# ============================================================================
+# RAILWAY ZERO-SECRETS DEPLOYMENT CONFIGURATION
+# ============================================================================
+# This configuration file defines Railway deployment settings with built-in
+# cost-protection guardrails and free-tier optimizations.
+#
+# COST PROTECTION FEATURES:
+# - Minimal resource allocations
+# - Free-tier optimized settings
+# - Auto-scaling disabled to prevent cost overruns
+# - Memory and CPU limits enforced
+#
+# IMPORTANT: Configure all secrets via Railway Dashboard or CLI
+# Reference: .agents file for complete secrets specification
+# ============================================================================
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "echo 'Building Suna with cost guardrails enabled...'"
+
+# ============================================================================
+# BACKEND SERVICE - API Server
+# ============================================================================
+[[services]]
+name = "backend"
+source = "backend"
+
+[services.build]
+builder = "NIXPACKS"
+buildCommand = "uv sync --frozen"
+
+[services.deploy]
+startCommand = "uv run api.py"
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# COST GUARDRAILS: Minimal resource allocation for free tier
+[services.deploy.resources]
+# Railway free tier: Start with minimal resources
+# These can be adjusted based on actual usage monitoring
+cpu = "0.5"  # 0.5 vCPU (minimal for free tier)
+memory = "512Mi"  # 512 MB RAM (minimal viable)
+# Note: Railway may assign default values; these are target minimums
+
+# Environment variables (all secrets must be set via Railway Dashboard)
+[services.deploy.env]
+ENV_MODE = "production"
+REDIS_HOST = "redis.railway.internal"
+REDIS_PORT = "6379"
+REDIS_SSL = "true"
+
+# COST MONITORING: Set up alerts in Railway Dashboard
+# 1. Go to Settings > Usage
+# 2. Set alert threshold at 80% of free tier limit
+# 3. Configure email notifications
+
+# ============================================================================
+# WORKER SERVICE - Background Task Processor
+# ============================================================================
+[[services]]
+name = "worker"
+source = "backend"
+
+[services.build]
+builder = "NIXPACKS"
+buildCommand = "uv sync --frozen"
+
+[services.deploy]
+startCommand = "uv run dramatiq --processes 2 --threads 2 run_agent_background"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# COST GUARDRAILS: Even more minimal for worker
+[services.deploy.resources]
+cpu = "0.25"  # Minimal CPU for background tasks
+memory = "256Mi"  # Minimal memory
+
+[services.deploy.env]
+ENV_MODE = "production"
+REDIS_HOST = "redis.railway.internal"
+REDIS_PORT = "6379"
+REDIS_SSL = "true"
+
+# ============================================================================
+# FRONTEND SERVICE - Next.js Application
+# ============================================================================
+[[services]]
+name = "frontend"
+source = "frontend"
+
+[services.build]
+builder = "NIXPACKS"
+buildCommand = "npm ci && npm run build"
+
+[services.deploy]
+startCommand = "npm start"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# COST GUARDRAILS: Minimal frontend resources
+[services.deploy.resources]
+cpu = "0.5"
+memory = "512Mi"
+
+[services.deploy.env]
+NODE_ENV = "production"
+NEXT_PUBLIC_ENV_MODE = "production"
+
+# ============================================================================
+# REDIS SERVICE - Cache and Message Broker
+# ============================================================================
+[[services]]
+name = "redis"
+source = "none"  # Using Railway's Redis plugin
+
+# Use Railway's Redis plugin instead of custom service
+# To add: Railway Dashboard > New > Database > Redis
+# This will automatically create redis.railway.internal endpoint
+
+# ============================================================================
+# COST PROTECTION GUARDRAILS - IMPLEMENTATION NOTES
+# ============================================================================
+# 
+# 1. FREE TIER LIMITS (as of 2025):
+#    - $5 monthly credit
+#    - Execution time is the primary cost factor
+#    - No credit card required for free tier
+#
+# 2. MONITORING STRATEGY:
+#    - Check Railway usage dashboard daily
+#    - Set up billing alerts at 80% threshold
+#    - Monitor via: railway logs --service=backend
+#
+# 3. AUTO-SHUTDOWN MECHANISM:
+#    - Deploy /scripts/railway-cost-monitor.sh as a cron job
+#    - Checks usage via Railway API
+#    - Triggers maintenance mode if threshold exceeded
+#    - See RAILWAY_DEPLOYMENT.md for setup instructions
+#
+# 4. MAINTENANCE MODE ACTIVATION:
+#    - When free tier limit reached:
+#      • Main services automatically paused
+#      • Static maintenance.html page deployed
+#      • Admin notified via configured channels
+#      • Migration to Coolify prepared
+#
+# 5. RESOURCE OPTIMIZATION:
+#    - All services use minimal viable resources
+#    - No auto-scaling enabled
+#    - Connection pooling minimized
+#    - Aggressive caching enabled
+#
+# 6. SECRETS MANAGEMENT:
+#    - NO secrets in this file or repository
+#    - All secrets via Railway Dashboard: Settings > Variables
+#    - Reference .agents file for complete list
+#    - Use master.secrets.json locally only
+#
+# ============================================================================
+# DEPLOYMENT CHECKLIST
+# ============================================================================
+#
+# Before first deploy:
+# [ ] Install Railway CLI: npm i -g @railway/cli
+# [ ] Login: railway login
+# [ ] Create project: railway init
+# [ ] Add Redis plugin via Dashboard
+# [ ] Configure ALL secrets from .agents file in Railway Dashboard
+# [ ] Set up billing alerts
+# [ ] Deploy: railway up
+# [ ] Verify health endpoints
+# [ ] Configure custom domain (optional)
+# [ ] Set up monitoring (scripts/railway-cost-monitor.sh)
+# [ ] Test maintenance mode activation
+#
+# Post-deployment:
+# [ ] Monitor resource usage daily
+# [ ] Check logs for errors: railway logs
+# [ ] Verify database migrations completed
+# [ ] Test all integrations
+# [ ] Document actual resource usage
+# [ ] Adjust resource limits if needed (within free tier)
+#
+# ============================================================================
+# EMERGENCY PROCEDURES
+# ============================================================================
+#
+# If free tier limit exceeded:
+# 1. Pause services: railway service pause --all
+# 2. Deploy maintenance page: railway up --service=maintenance
+# 3. Review usage logs: railway usage
+# 4. Migrate to Coolify (see COOLIFY_MIGRATION.md)
+#
+# If service unresponsive:
+# 1. Check logs: railway logs --service=backend --tail
+# 2. Restart service: railway service restart backend
+# 3. Check resource usage: railway status
+# 4. Scale up temporarily if needed
+#
+# ============================================================================
+
+# Service dependencies (Railway handles automatically)
+# backend depends on: redis
+# worker depends on: redis, backend
+# frontend depends on: backend

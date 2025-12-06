@@ -225,3 +225,8 @@ apps/mobile/.env*.local
 apps/mobile/app-example
 # Docker-specific env files
 *.env.docker
+
+# Master secrets file (NEVER COMMIT)
+master.secrets.json
+*secrets*.json
+!master.secrets.json.template
