@@ -89,30 +89,52 @@ enable_maintenance() {
   # Create maintenance service if needed
   print_info "Setting up maintenance service..."
   
-  # Create a minimal static server for maintenance page
-  cat > /tmp/maintenance-server.js << 'EOF'
+  # Create secure temporary directory
+  TEMP_DIR=$(mktemp -d -t railway-maintenance-XXXXXX)
+  trap "rm -rf '$TEMP_DIR'" EXIT
+  
+  # Create a minimal static server for maintenance page with error handling
+  cat > "$TEMP_DIR/maintenance-server.js" << 'EOF'
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
 const port = process.env.PORT || 3000;
-const maintenanceHtml = fs.readFileSync(path.join(__dirname, 'maintenance.html'), 'utf8');
+
+let maintenanceHtml;
+try {
+  maintenanceHtml = fs.readFileSync(path.join(__dirname, 'maintenance.html'), 'utf8');
+} catch (error) {
+  console.error('Error reading maintenance.html:', error);
+  process.exit(1);
+}
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, {'Content-Type': 'text/html'});
   res.end(maintenanceHtml);
 });
 
+server.on('error', (error) => {
+  console.error('Server error:', error);
+  process.exit(1);
+});
+
 server.listen(port, () => {
   console.log(`Maintenance page server running on port ${port}`);
 });
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
 EOF
   
-  # Copy maintenance files to a temporary deployment directory
-  TEMP_DIR="/tmp/railway-maintenance-$$"
-  mkdir -p "$TEMP_DIR"
+  # Copy maintenance files to temporary deployment directory
   cp "$MAINTENANCE_FILE" "$TEMP_DIR/"
-  cp /tmp/maintenance-server.js "$TEMP_DIR/"
   
   # Create package.json for maintenance service
   cat > "$TEMP_DIR/package.json" << EOF
@@ -154,9 +176,7 @@ EOF
   # Log maintenance activation
   echo "$(date -Iseconds): Maintenance mode enabled" >> "$PROJECT_ROOT/.maintenance.log"
   
-  # Clean up temp files
-  rm -rf "$TEMP_DIR"
-  rm -f /tmp/maintenance-server.js
+  # Temp files cleaned up automatically by trap
   
   print_success "Maintenance mode enabled"
   

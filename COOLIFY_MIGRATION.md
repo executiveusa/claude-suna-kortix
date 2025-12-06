@@ -668,5 +668,5 @@ This migration typically takes 2-4 hours and results in:
 ---
 
 **Document Version:** 1.0.0  
-**Last Updated:** December 2025  
+**Last Updated:** December 2024  
 **Tested With:** Railway → Coolify v4.0, Suna v0.1.3

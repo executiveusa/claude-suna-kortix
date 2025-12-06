@@ -557,5 +557,5 @@ Apache License 2.0 - See [LICENSE](./LICENSE)
 ---
 
 **System Version:** 1.0.0  
-**Last Updated:** December 2025  
-**Compatibility:** Railway (2025), Coolify v4.0+, Suna v0.1.3+
+**Last Updated:** December 2024  
+**Compatibility:** Railway (2024), Coolify v4.0+, Suna v0.1.3+

@@ -37,6 +37,9 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
 # COST GUARDRAILS: Minimal resource allocation for free tier
+# NOTE: Railway v3+ uses different resource specification methods
+# These settings may need adjustment based on Railway's current configuration format
+# Verify with Railway documentation: https://docs.railway.app/
 [services.deploy.resources]
 # Railway free tier: Start with minimal resources
 # These can be adjusted based on actual usage monitoring

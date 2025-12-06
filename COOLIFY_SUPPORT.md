@@ -463,5 +463,5 @@ See [COOLIFY_MIGRATION.md](./COOLIFY_MIGRATION.md) for detailed migration steps.
 
 ---
 
-**Last Updated:** December 2025  
+**Last Updated:** December 2024  
 **Compatibility:** Coolify v4.0+, Suna v0.1.3+

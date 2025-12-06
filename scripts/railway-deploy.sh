@@ -121,9 +121,19 @@ set_secrets() {
   
   print_info "Reading secrets from master.secrets.json..."
   
+  # Detect project name dynamically or use first available
+  PROJECT_NAME=$(cat "$MASTER_SECRETS_FILE" | jq -r '.projects | keys[0]')
+  
+  if [ -z "$PROJECT_NAME" ] || [ "$PROJECT_NAME" == "null" ]; then
+    print_error "No project found in master.secrets.json"
+    exit 1
+  fi
+  
+  print_info "Using project: $PROJECT_NAME"
+  
   # Extract Railway environment secrets
-  SECRETS=$(cat "$MASTER_SECRETS_FILE" | jq -r '
-    .projects."suna-kortix".environments.railway |
+  SECRETS=$(cat "$MASTER_SECRETS_FILE" | jq -r --arg proj "$PROJECT_NAME" '
+    .projects[$proj].environments.railway |
     to_entries[] | .value | to_entries[] |
     select(.value != "" and .value != null) |
     "\(.key)=\(.value)"
@@ -144,7 +154,8 @@ set_secrets() {
     CURRENT=$((CURRENT + 1))
     printf "Setting %d/%d: %s..." "$CURRENT" "$SECRET_COUNT" "$key"
     
-    if railway variables set "$key=$value" &> /dev/null; then
+    # Use environment variable to avoid exposing secret in process list
+    if KEY_NAME="$key" KEY_VALUE="$value" railway variables set "$KEY_NAME=$KEY_VALUE" &> /dev/null; then
       echo -e " ${GREEN}✓${NC}"
     else
       echo -e " ${RED}✗${NC}"

@@ -636,5 +636,5 @@ When triggered, follow: [COOLIFY_MIGRATION.md](./COOLIFY_MIGRATION.md)
 ---
 
 **Document Version:** 1.0.0  
-**Last Updated:** December 2025  
-**Tested With:** Railway (2025), Suna v0.1.3+
+**Last Updated:** December 2024  
+**Tested With:** Railway (2024), Suna v0.1.3+
