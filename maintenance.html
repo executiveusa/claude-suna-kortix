@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="300">
+    <title>Suna - Maintenance Mode</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .status {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin: 30px 0;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .info-box h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .info-box li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #ffffff;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            margin-top: 40px;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        .button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🤖</div>
+        <h1>Suna is Taking a Break</h1>
+        
+        <div class="status">⏸️ Maintenance Mode Active</div>
+        
+        <p>We're currently performing essential maintenance to keep Suna running smoothly.</p>
+        
+        <div class="spinner"></div>
+        
+        <p>This page will automatically refresh every 5 minutes.</p>
+
+        <div class="info-box">
+            <h2>Why is this happening?</h2>
+            <ul>
+                <li>Free tier resource limits reached</li>
+                <li>Scheduled system maintenance</li>
+                <li>Platform migration in progress</li>
+                <li>Cost protection guardrails activated</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h2>What happens next?</h2>
+            <ul>
+                <li>Services are being optimized</li>
+                <li>Migration to alternative hosting prepared</li>
+                <li>Your data remains safe and secure</li>
+                <li>Normal operations will resume shortly</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h2>Need immediate access?</h2>
+            <p style="padding-left: 0;">If you're an administrator, you can:</p>
+            <ul>
+                <li>Check Railway dashboard for status updates</li>
+                <li>Review cost monitoring logs</li>
+                <li>Consult COOLIFY_MIGRATION.md for migration steps</li>
+                <li>Contact support if urgent assistance needed</li>
+            </ul>
+        </div>
+
+        <a href="https://github.com/kortix-ai/suna" class="button" target="_blank">
+            View on GitHub
+        </a>
+
+        <div class="footer">
+            <p><strong>Suna AI Agent Platform</strong></p>
+            <p>Maintenance mode activated by cost protection system</p>
+            <p id="timestamp"></p>
+        </div>
+    </div>
+
+    <script>
+        // Display current timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                'Last checked: ' + now.toLocaleString();
+        }
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+
+        // Check if we can reach the backend
+        async function checkStatus() {
+            try {
+                const response = await fetch('/health', { 
+                    method: 'GET',
+                    cache: 'no-cache'
+                });
+                if (response.ok) {
+                    // Backend is back online, reload to main app
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                // Still in maintenance mode
+                console.log('Service still in maintenance mode');
+            }
+        }
+
+        // Check every 30 seconds if backend is back
+        setInterval(checkStatus, 30000);
+    </script>
+</body>
+</html>

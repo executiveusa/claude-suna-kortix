@@ -1,0 +1,661 @@
+{
+  "project": "suna-kortix",
+  "description": "Suna AI Agent Platform - Secrets specification for Railway zero-secrets deployment",
+  "version": "1.0.0",
+  "core": {
+    "description": "Essential secrets required for basic application functionality",
+    "secrets": [
+      {
+        "name": "SUPABASE_URL",
+        "description": "Supabase project URL for database connectivity",
+        "format": "https://<project-id>.supabase.co",
+        "required": true,
+        "placeholder": "https://your-project.supabase.co",
+        "category": "database"
+      },
+      {
+        "name": "SUPABASE_ANON_KEY",
+        "description": "Supabase anonymous/public API key for client-side access",
+        "format": "JWT token string (typically starts with 'eyJ')",
+        "required": true,
+        "placeholder": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "category": "database"
+      },
+      {
+        "name": "SUPABASE_SERVICE_ROLE_KEY",
+        "description": "Supabase service role key for server-side admin operations",
+        "format": "JWT token string (typically starts with 'eyJ')",
+        "required": true,
+        "placeholder": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "category": "database"
+      },
+      {
+        "name": "SUPABASE_JWT_SECRET",
+        "description": "JWT secret for token verification",
+        "format": "Base64 encoded string (32+ characters)",
+        "required": true,
+        "placeholder": "your-super-secret-jwt-token-with-at-least-32-characters-long",
+        "category": "database"
+      },
+      {
+        "name": "ENCRYPTION_KEY",
+        "description": "Base64 encoded encryption key for sensitive data",
+        "format": "Base64 string (32 bytes encoded)",
+        "required": true,
+        "placeholder": "base64_encoded_32_byte_key",
+        "category": "security"
+      },
+      {
+        "name": "KORTIX_ADMIN_API_KEY",
+        "description": "Admin API key for Kortix administrative functions",
+        "format": "Hex string (64 characters)",
+        "required": true,
+        "placeholder": "hex_encoded_admin_key",
+        "category": "security"
+      }
+    ]
+  },
+  "infrastructure": {
+    "description": "Infrastructure services configuration",
+    "secrets": [
+      {
+        "name": "REDIS_HOST",
+        "description": "Redis server hostname",
+        "format": "hostname or IP",
+        "required": true,
+        "placeholder": "redis",
+        "default": "redis",
+        "category": "cache"
+      },
+      {
+        "name": "REDIS_PORT",
+        "description": "Redis server port",
+        "format": "port number",
+        "required": true,
+        "placeholder": "6379",
+        "default": "6379",
+        "category": "cache"
+      },
+      {
+        "name": "REDIS_PASSWORD",
+        "description": "Redis authentication password",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "default": "",
+        "category": "cache"
+      },
+      {
+        "name": "REDIS_SSL",
+        "description": "Enable SSL for Redis connection",
+        "format": "boolean (true/false)",
+        "required": false,
+        "placeholder": "false",
+        "default": "false",
+        "category": "cache"
+      }
+    ]
+  },
+  "llm_providers": {
+    "description": "LLM API keys - at least one provider is required for AI functionality",
+    "requirement": "At least one LLM provider is required",
+    "secrets": [
+      {
+        "name": "ANTHROPIC_API_KEY",
+        "description": "Anthropic Claude API key (recommended)",
+        "format": "sk-ant-...",
+        "required": false,
+        "placeholder": "sk-ant-api03-...",
+        "category": "llm",
+        "provider": "Anthropic",
+        "signup_url": "https://console.anthropic.com/"
+      },
+      {
+        "name": "OPENAI_API_KEY",
+        "description": "OpenAI GPT API key",
+        "format": "sk-...",
+        "required": false,
+        "placeholder": "sk-...",
+        "category": "llm",
+        "provider": "OpenAI",
+        "signup_url": "https://platform.openai.com/"
+      },
+      {
+        "name": "GROQ_API_KEY",
+        "description": "Groq API key for fast inference",
+        "format": "gsk_...",
+        "required": false,
+        "placeholder": "gsk_...",
+        "category": "llm",
+        "provider": "Groq",
+        "signup_url": "https://console.groq.com/"
+      },
+      {
+        "name": "OPENROUTER_API_KEY",
+        "description": "OpenRouter API key for multiple model access",
+        "format": "sk-or-...",
+        "required": false,
+        "placeholder": "sk-or-...",
+        "category": "llm",
+        "provider": "OpenRouter",
+        "signup_url": "https://openrouter.ai/"
+      },
+      {
+        "name": "GEMINI_API_KEY",
+        "description": "Google Gemini API key",
+        "format": "AIza...",
+        "required": false,
+        "placeholder": "AIza...",
+        "category": "llm",
+        "provider": "Google",
+        "signup_url": "https://makersuite.google.com/"
+      },
+      {
+        "name": "XAI_API_KEY",
+        "description": "xAI Grok API key",
+        "format": "xai-...",
+        "required": false,
+        "placeholder": "xai-...",
+        "category": "llm",
+        "provider": "xAI",
+        "signup_url": "https://x.ai/"
+      },
+      {
+        "name": "MORPH_API_KEY",
+        "description": "Morph API key for fast code editing",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "llm",
+        "provider": "Morph",
+        "signup_url": "https://morphllm.com/"
+      },
+      {
+        "name": "OPENAI_COMPATIBLE_API_KEY",
+        "description": "OpenAI-compatible API key",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "llm",
+        "provider": "Custom"
+      },
+      {
+        "name": "OPENAI_COMPATIBLE_API_BASE",
+        "description": "OpenAI-compatible API base URL",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "",
+        "category": "llm",
+        "provider": "Custom"
+      },
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "description": "AWS access key for Bedrock",
+        "format": "AKIA...",
+        "required": false,
+        "placeholder": "",
+        "category": "llm",
+        "provider": "AWS Bedrock"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "description": "AWS secret access key for Bedrock",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "llm",
+        "provider": "AWS Bedrock"
+      },
+      {
+        "name": "AWS_REGION_NAME",
+        "description": "AWS region for Bedrock",
+        "format": "us-east-1, us-west-2, etc.",
+        "required": false,
+        "placeholder": "us-east-1",
+        "category": "llm",
+        "provider": "AWS Bedrock"
+      }
+    ]
+  },
+  "search_and_scraping": {
+    "description": "Search and web scraping API keys - required for web intelligence features",
+    "secrets": [
+      {
+        "name": "TAVILY_API_KEY",
+        "description": "Tavily API key for web search",
+        "format": "tvly-...",
+        "required": true,
+        "placeholder": "tvly-...",
+        "category": "search",
+        "signup_url": "https://tavily.com/"
+      },
+      {
+        "name": "FIRECRAWL_API_KEY",
+        "description": "Firecrawl API key for web scraping",
+        "format": "fc-...",
+        "required": true,
+        "placeholder": "fc-...",
+        "category": "scraping",
+        "signup_url": "https://firecrawl.dev/"
+      },
+      {
+        "name": "FIRECRAWL_URL",
+        "description": "Firecrawl API base URL",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "https://api.firecrawl.dev",
+        "default": "https://api.firecrawl.dev",
+        "category": "scraping"
+      },
+      {
+        "name": "SERPER_API_KEY",
+        "description": "Serper API key for image search",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "search",
+        "signup_url": "https://serper.dev/"
+      },
+      {
+        "name": "EXA_API_KEY",
+        "description": "Exa API key for people and company search",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "search",
+        "signup_url": "https://exa.ai/"
+      },
+      {
+        "name": "SEMANTIC_SCHOLAR_API_KEY",
+        "description": "Semantic Scholar API key for academic paper search",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "search",
+        "signup_url": "https://www.semanticscholar.org/product/api"
+      },
+      {
+        "name": "RAPID_API_KEY",
+        "description": "RapidAPI key for various API integrations",
+        "format": "string",
+        "required": true,
+        "placeholder": "",
+        "category": "search",
+        "signup_url": "https://rapidapi.com/"
+      }
+    ]
+  },
+  "agent_sandbox": {
+    "description": "Daytona sandbox environment for agent execution",
+    "secrets": [
+      {
+        "name": "DAYTONA_API_KEY",
+        "description": "Daytona API key for sandbox functionality",
+        "format": "string",
+        "required": true,
+        "placeholder": "",
+        "category": "sandbox",
+        "signup_url": "https://app.daytona.io/"
+      },
+      {
+        "name": "DAYTONA_SERVER_URL",
+        "description": "Daytona server URL",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "https://app.daytona.io/api",
+        "default": "https://app.daytona.io/api",
+        "category": "sandbox"
+      },
+      {
+        "name": "DAYTONA_TARGET",
+        "description": "Daytona deployment target region",
+        "format": "us, eu, etc.",
+        "required": false,
+        "placeholder": "us",
+        "default": "us",
+        "category": "sandbox"
+      }
+    ]
+  },
+  "optional_integrations": {
+    "description": "Optional third-party integrations and tools",
+    "secrets": [
+      {
+        "name": "MCP_CREDENTIAL_ENCRYPTION_KEY",
+        "description": "Encryption key for MCP credentials storage",
+        "format": "Base64 encoded string",
+        "required": false,
+        "placeholder": "",
+        "category": "security"
+      },
+      {
+        "name": "TRIGGER_WEBHOOK_SECRET",
+        "description": "Shared secret for webhook authentication",
+        "format": "Hex string",
+        "required": false,
+        "placeholder": "",
+        "category": "webhook"
+      },
+      {
+        "name": "WEBHOOK_BASE_URL",
+        "description": "Base URL for webhook callbacks",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "https://your-domain.com",
+        "category": "webhook"
+      },
+      {
+        "name": "COMPOSIO_API_KEY",
+        "description": "Composio API key for 200+ service integrations",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "integration",
+        "signup_url": "https://app.composio.dev/"
+      },
+      {
+        "name": "COMPOSIO_WEBHOOK_SECRET",
+        "description": "Composio webhook secret",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "integration"
+      },
+      {
+        "name": "COMPOSIO_API_BASE",
+        "description": "Composio API base URL",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "https://backend.composio.dev",
+        "default": "https://backend.composio.dev",
+        "category": "integration"
+      },
+      {
+        "name": "GOOGLE_CLIENT_ID",
+        "description": "Google OAuth client ID",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "integration"
+      },
+      {
+        "name": "GOOGLE_CLIENT_SECRET",
+        "description": "Google OAuth client secret",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "integration"
+      },
+      {
+        "name": "GOOGLE_REDIRECT_URI",
+        "description": "Google OAuth redirect URI",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "http://localhost:8000/api/google/callback",
+        "default": "http://localhost:8000/api/google/callback",
+        "category": "integration"
+      },
+      {
+        "name": "ZENDESK_AUTH_CONFIG",
+        "description": "Zendesk authentication configuration JSON",
+        "format": "JSON string",
+        "required": false,
+        "placeholder": "",
+        "category": "integration"
+      },
+      {
+        "name": "CHUNKR_API_KEY",
+        "description": "Chunkr API key for document processing",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "integration"
+      }
+    ]
+  },
+  "monitoring_and_observability": {
+    "description": "Monitoring, logging, and observability services",
+    "secrets": [
+      {
+        "name": "LANGFUSE_PUBLIC_KEY",
+        "description": "Langfuse public key for LLM observability",
+        "format": "pk-lf-...",
+        "required": false,
+        "placeholder": "",
+        "category": "observability",
+        "signup_url": "https://cloud.langfuse.com/"
+      },
+      {
+        "name": "LANGFUSE_SECRET_KEY",
+        "description": "Langfuse secret key",
+        "format": "sk-lf-...",
+        "required": false,
+        "placeholder": "",
+        "category": "observability"
+      },
+      {
+        "name": "LANGFUSE_HOST",
+        "description": "Langfuse host URL",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "https://cloud.langfuse.com",
+        "default": "https://cloud.langfuse.com",
+        "category": "observability"
+      },
+      {
+        "name": "SENTRY_DSN",
+        "description": "Sentry DSN for error tracking",
+        "format": "https://...@sentry.io/...",
+        "required": false,
+        "placeholder": "",
+        "category": "observability",
+        "signup_url": "https://sentry.io/"
+      },
+      {
+        "name": "FREESTYLE_API_KEY",
+        "description": "Freestyle monitoring API key",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "observability"
+      },
+      {
+        "name": "CLOUDFLARE_API_TOKEN",
+        "description": "Cloudflare API token",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "infrastructure"
+      }
+    ]
+  },
+  "billing_and_payments": {
+    "description": "Payment processing and billing integrations",
+    "secrets": [
+      {
+        "name": "STRIPE_SECRET_KEY",
+        "description": "Stripe secret key for payment processing",
+        "format": "sk_test_... or sk_live_...",
+        "required": false,
+        "placeholder": "",
+        "category": "billing",
+        "signup_url": "https://stripe.com/"
+      },
+      {
+        "name": "STRIPE_WEBHOOK_SECRET",
+        "description": "Stripe webhook signing secret",
+        "format": "whsec_...",
+        "required": false,
+        "placeholder": "",
+        "category": "billing"
+      },
+      {
+        "name": "STRIPE_DEFAULT_PLAN_ID",
+        "description": "Default Stripe plan/price ID",
+        "format": "price_...",
+        "required": false,
+        "placeholder": "",
+        "category": "billing"
+      },
+      {
+        "name": "STRIPE_DEFAULT_TRIAL_DAYS",
+        "description": "Default trial period in days",
+        "format": "number",
+        "required": false,
+        "placeholder": "14",
+        "default": "14",
+        "category": "billing"
+      }
+    ]
+  },
+  "voice_integration": {
+    "description": "Voice API integrations",
+    "secrets": [
+      {
+        "name": "VAPI_PRIVATE_KEY",
+        "description": "VAPI private key for voice integration",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "voice",
+        "signup_url": "https://vapi.ai/"
+      },
+      {
+        "name": "VAPI_PHONE_NUMBER_ID",
+        "description": "VAPI phone number ID",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "voice"
+      },
+      {
+        "name": "VAPI_SERVER_URL",
+        "description": "VAPI server URL",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "",
+        "category": "voice"
+      }
+    ]
+  },
+  "frontend_config": {
+    "description": "Frontend application configuration",
+    "secrets": [
+      {
+        "name": "NEXT_PUBLIC_SUPABASE_URL",
+        "description": "Public Supabase URL for frontend",
+        "format": "https://<project-id>.supabase.co",
+        "required": true,
+        "placeholder": "https://your-project.supabase.co",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "description": "Public Supabase anon key for frontend",
+        "format": "JWT token string",
+        "required": true,
+        "placeholder": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_BACKEND_URL",
+        "description": "Backend API URL for frontend",
+        "format": "https://... or http://localhost:8000/api",
+        "required": true,
+        "placeholder": "http://localhost:8000/api",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_URL",
+        "description": "Public URL of the frontend application",
+        "format": "https://... or http://localhost:3000",
+        "required": true,
+        "placeholder": "http://localhost:3000",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_ENV_MODE",
+        "description": "Environment mode",
+        "format": "local, staging, or production",
+        "required": false,
+        "placeholder": "local",
+        "default": "local",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_POSTHOG_KEY",
+        "description": "PostHog analytics key",
+        "format": "phc_...",
+        "required": false,
+        "placeholder": "",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_SENTRY_DSN",
+        "description": "Sentry DSN for frontend error tracking",
+        "format": "https://...@sentry.io/...",
+        "required": false,
+        "placeholder": "",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_TOLT_REFERRAL_ID",
+        "description": "Tolt referral ID",
+        "format": "string",
+        "required": false,
+        "placeholder": "",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_PHONE_NUMBER_MANDATORY",
+        "description": "Whether phone number is mandatory",
+        "format": "true or false",
+        "required": false,
+        "placeholder": "false",
+        "default": "false",
+        "category": "frontend"
+      },
+      {
+        "name": "NEXT_PUBLIC_APP_URL",
+        "description": "Application URL",
+        "format": "https://...",
+        "required": false,
+        "placeholder": "http://localhost:3000",
+        "category": "frontend"
+      }
+    ]
+  },
+  "environment_config": {
+    "description": "General environment configuration",
+    "secrets": [
+      {
+        "name": "ENV_MODE",
+        "description": "Environment mode",
+        "format": "local, staging, or production",
+        "required": false,
+        "placeholder": "local",
+        "default": "local",
+        "category": "general"
+      }
+    ]
+  },
+  "schema_version": "1.0.0",
+  "usage_instructions": {
+    "description": "How to use this secrets specification file",
+    "steps": [
+      "1. Review all required secrets marked with 'required: true'",
+      "2. Obtain API keys from respective providers using signup_url links",
+      "3. Update master.secrets.json with actual values (never commit this file)",
+      "4. For Railway deployment, configure secrets in Railway dashboard",
+      "5. For local development, copy values to backend/.env and frontend/.env.local",
+      "6. Use placeholder values for testing in non-production environments"
+    ],
+    "security_notes": [
+      "NEVER commit actual secrets to version control",
+      "Use environment variables or secure secret management systems",
+      "Rotate secrets regularly, especially after team member changes",
+      "Use different secrets for development, staging, and production",
+      "Monitor secret usage and access logs"
+    ]
+  }
+}
